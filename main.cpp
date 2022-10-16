@@ -321,18 +321,18 @@ void checkHole() {
 }
 
 void checkEdges() {
-    for (int32_t i = 0; i <= playerCount; i++) {
-        if (!inHole[i]) {
+    // for (int32_t i = 0; i <= playerCount; i++) {
+        if (!inHole[playerTurn]) {
             for (auto &edge : edges) {
                 if (edge.isVert) {
                     if (theta > 90 && theta < 270) { // left
-                        if ((abs(ballsX[i] - edge.x) < 3) && (ballsY[i] > edge.y) && (ballsY[i] < (edge.y + edge.l))) {
+                        if ((abs(ballsX[playerTurn] - edge.x) < 3) && (ballsY[playerTurn] > edge.y) && (ballsY[playerTurn] < (edge.y + edge.l))) {
                             theta = (sin((pi * (float)theta / 180.0)) * 180.0)/pi;
                             playHitSound();
                             justHit = true;
                         }
                     } else { // right
-                        if ((abs(ballsX[i] - edge.x) < 3) && (ballsY[i] > edge.y) && (ballsY[i] < (edge.y + edge.l))) {
+                        if ((abs(ballsX[playerTurn] - edge.x) < 3) && (ballsY[playerTurn] > edge.y) && (ballsY[playerTurn] < (edge.y + edge.l))) {
                             theta = 180 - (sin((pi * (float)theta / 180.0)) * 180.0)/pi;
                             playHitSound();
                             justHit = true;
@@ -340,13 +340,13 @@ void checkEdges() {
                     }
                 } else {
                     if (theta > 0 && theta < 180) { // top
-                        if ((abs(ballsY[i] - edge.y) < 3) && (ballsX[i] > edge.x) && (ballsX[i] < (edge.x + edge.l))) {
+                        if ((abs(ballsY[playerTurn] - edge.y) < 3) && (ballsX[playerTurn] > edge.x) && (ballsX[playerTurn] < (edge.x + edge.l))) {
                             theta = 270 + (sin((pi * (float)(theta-270) / 180.0)) * 180.0)/pi;
                             playHitSound();
                             justHit = true;
                         }
                     } else { // bottom
-                        if ((abs(ballsY[i] - edge.y) < 3) && (ballsX[i] > edge.x) && (ballsX[i] < (edge.x + edge.l))) {
+                        if ((abs(ballsY[playerTurn] - edge.y) < 3) && (ballsX[playerTurn] > edge.x) && (ballsX[playerTurn] < (edge.x + edge.l))) {
                             theta = 90 + (sin((pi * (float)(theta-90) / 180.0)) * 180.0)/pi;
                             playHitSound();
                             justHit = true;
@@ -355,7 +355,7 @@ void checkEdges() {
                 }
             }
         }
-    }
+    // }
 }
 
 void update(uint32_t tick) {
