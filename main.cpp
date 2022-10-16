@@ -287,7 +287,7 @@ void checkHole() {
                         inHole[i] = false;
                     }
                     hole += 1;
-                    playerTurn = 0;
+                    playerTurn = playerCount;
                     hasSetUpHole = false;
                     edges.clear();
                     edges.shrink_to_fit();
@@ -586,7 +586,7 @@ void draw(uint32_t tick) {
     }
 
     for (int32_t i = 0; i < 9; i++) {
-        text(strokes[i] == 0 && i != hole ? "-" : str(strokes[playerTurn][i]),(i*7) + 2,0);
+        text(strokes[playerTurn][i] == 0 && i != hole ? "-" : str(strokes[playerTurn][i]),(i*7) + 2,0);
     }
 
     pen(15,15,15);
