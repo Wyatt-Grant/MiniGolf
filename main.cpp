@@ -19,6 +19,10 @@ float pi = 3.14159265;
 int32_t theta = 90;
 float ballX = 0;
 float ballY = 0;
+
+float ballsX[] = {0,0,0,0};
+float ballsY[] = {0,0,0,0};
+
 float arrowRadius = 15;
 int32_t ballRadius = 2;
 float power = 0;
@@ -39,8 +43,16 @@ float holeY = 0;
 int32_t holeRadius = 3;
 std::vector<Edge> edges;
 int32_t hole = 0;
-int32_t strokes[] = {0,0,0,0,0,0,0,0,0};
+int32_t strokes[4][9] = {
+    {0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0},
+};
 bool hasSetUpHole = false;
+int32_t playerCount = 0;
+int32_t playerTurn = 0;
+bool inHole[] = {false,false,false,false};
 
 void writeScores() {
    uint32_t ints = save_and_disable_interrupts();
@@ -77,22 +89,26 @@ void init() {
 void setUpHole() {
     switch(hole) {
         case 0:
-            ballX = 30;
-            ballY = 60;
+            for (int32_t i = 0; i <= playerCount; i++) {
+                ballsX[i] = 30;
+                ballsY[i] = 60;
+                strokes[i][hole] = 0;
+            }
             holeX = 90;
             holeY = 60;
-            strokes[hole] = 0;
             edges.push_back({10,40,100,false});
             edges.push_back({10,80,100,false});
             edges.push_back({10,40,40,true});
             edges.push_back({110,40,41,true});
             break;
         case 1:
-            ballX = 95;
-            ballY = 80;
+            for (int32_t i = 0; i <= playerCount; i++) {
+                ballsX[i] = 95;
+                ballsY[i] = 80;
+                strokes[i][hole] = 0;
+            }
             holeX = 25;
             holeY = 45;
-            strokes[hole] = 0;
             edges.push_back({40,60,70,false});
             edges.push_back({10,100,100,false});
             edges.push_back({10,30,30,false});
@@ -102,11 +118,13 @@ void setUpHole() {
             edges.push_back({40,30,30,true});
             break;
         case 2:
-            ballX = 100;
-            ballY = 60;
+            for (int32_t i = 0; i <= playerCount; i++) {
+                ballsX[i] = 100;
+                ballsY[i] = 60;
+                strokes[i][hole] = 0;
+            }
             holeX = 20;
             holeY = 60;
-            strokes[hole] = 0;
             edges.push_back({10,40,30,false});
             edges.push_back({50,40,60,false});
 
@@ -125,11 +143,13 @@ void setUpHole() {
             edges.push_back({70,55,10,false});
             break;
         case 3:
-            ballX = 30;
-            ballY = 30;
+            for (int32_t i = 0; i <= playerCount; i++) {
+                ballsX[i] = 30;
+                ballsY[i] = 30;
+                strokes[i][hole] = 0;
+            }
             holeX = 90;
             holeY = 90;
-            strokes[hole] = 0;
             edges.push_back({10,20,40,false});
             edges.push_back({10,60,60,false});
             edges.push_back({10,20,40,true});
@@ -141,11 +161,13 @@ void setUpHole() {
             edges.push_back({110,40,61,true});
             break;
         case 4:
-            ballX = 30;
-            ballY = 100;
+            for (int32_t i = 0; i <= playerCount; i++) {
+                ballsX[i] = 30;
+                ballsY[i] = 100;
+                strokes[i][hole] = 0;
+            }
             holeX = 100;
             holeY = 60;
-            strokes[hole] = 0;
             edges.push_back({10,110,40,false});
             edges.push_back({10,70,20,false});
             edges.push_back({10,70,41,true});
@@ -162,11 +184,13 @@ void setUpHole() {
             edges.push_back({110,30,41,true});
             break;
         case 5:
-            ballX = 20;
-            ballY = 40;
+            for (int32_t i = 0; i <= playerCount; i++) {
+                ballsX[i] = 20;
+                ballsY[i] = 40;
+                strokes[i][hole] = 0;
+            }
             holeX = 40;
             holeY = 100;
-            strokes[hole] = 0;
             edges.push_back({10,50,60,false});
             edges.push_back({10,30,20,true});
 
@@ -179,11 +203,13 @@ void setUpHole() {
             edges.push_back({30,90,40,false});
             break;
         case 6:
-            ballX = 20;
-            ballY = 100;
+            for (int32_t i = 0; i <= playerCount; i++) {
+                ballsX[i] = 20;
+                ballsY[i] = 100;
+                strokes[i][hole] = 0;
+            }
             holeX = 90;
             holeY = 90;
-            strokes[hole] = 0;
             edges.push_back({10,110,40,false});
             edges.push_back({10,20,100,false});
             edges.push_back({50,35,20,false});
@@ -194,11 +220,13 @@ void setUpHole() {
             edges.push_back({110,20,91,true});
             break;
         case 7:
-            ballX = 30;
-            ballY = 90;
+            for (int32_t i = 0; i <= playerCount; i++) {
+                ballsX[i] = 30;
+                ballsY[i] = 90;
+                strokes[i][hole] = 0;
+            }
             holeX = 90;
             holeY = 40;
-            strokes[hole] = 0;
             edges.push_back({10,110,40,false});
             edges.push_back({10,70,60,false});
             edges.push_back({50,80,20,false});
@@ -217,11 +245,13 @@ void setUpHole() {
             edges.push_back({80,60,10,true});
             break;
         case 8:
-            ballX = 100;
-            ballY = 100;
+            for (int32_t i = 0; i <= playerCount; i++) {
+                ballsX[i] = 100;
+                ballsY[i] = 100;
+                strokes[i][hole] = 0;
+            }
             holeX = 60;
             holeY = 80;
-            strokes[hole] = 0;
             edges.push_back({10,110,60,false});
             edges.push_back({10,20,100,false});
             edges.push_back({30,40,60,false});
@@ -239,63 +269,89 @@ void setUpHole() {
 }
 
 void checkHole() {
-    if (abs(ballX - holeX) < 3 && (abs(ballY - holeY) < 3) && cpower < 60) {
-        cpower = 0;
-        power = 0;
-        ballX = 0;
-        ballY = 0;
-        hole += 1;
-        hasSetUpHole = false;
-        edges.clear();
-        edges.shrink_to_fit();
+    for (int32_t i = 0; i <= playerCount; i++) {
+        if (!inHole[i]) {
+            if (abs(ballsX[i] - holeX) < 3 && (abs(ballsY[i] - holeY) < 3) && cpower < 60) {
+                cpower = 0;
+                power = 0;
+                inHole[i] = true;
+                bool allIn = true;
+                for (int32_t i = 0; i <= playerCount; i++) {
+                    if (!inHole[i]) {
+                        allIn = false;
+                        break;
+                    }
+                }
+                if (allIn) {
+                    for (int32_t i = 0; i <= playerCount; i++) {
+                        inHole[i] = false;
+                    }
+                    hole += 1;
+                    playerTurn = 0;
+                    hasSetUpHole = false;
+                    edges.clear();
+                    edges.shrink_to_fit();
+                    for (int32_t i = 0; i <= playerCount; i++) {
+                        ballsX[i] = 0;
+                        ballsY[i] = 0;
+                    }
+                }
 
-        if (hole == 9) { //end game
-            titlescreen = true;
-            hole = 0;
-            int32_t total = 0;
-            for (int32_t i = 0; i < 9; i++) {
-                total += strokes[i];
-                strokes[i] = 0;
-            }
-            if (hiscore > total) {
-                hiscore = total;       
-                saveMyData();
-                readBackMyData();
+                if (hole == 9) { //end game
+                    titlescreen = true;
+                    hole = 0;
+                    for (int32_t n = 0; n <= playerCount; n++) {
+                        int32_t total = 0;
+                        for (int32_t i = 0; i < 9; i++) {
+                            total += strokes[n][i];
+                            strokes[n][i] = 0;
+                        }
+                        if (hiscore > total) {
+                            hiscore = total;       
+                            saveMyData();
+                            readBackMyData();
+                        }
+                    }
+                }
+
+                playHitSound();
             }
         }
-
-        playHitSound();
     }
 }
 
 void checkEdges() {
-    for (auto &edge : edges) {
-        if (edge.isVert) {
-            if (theta > 90 && theta < 270) { // left
-                if ((abs(ballX - edge.x) < 3) && (ballY > edge.y) && (ballY < (edge.y + edge.l))) {
-                    theta = (sin((pi * (float)theta / 180.0)) * 180.0)/pi;
-                    playHitSound();
-                    justHit = true;
-                }
-            } else { // right
-                if ((abs(ballX - edge.x) < 3) && (ballY > edge.y) && (ballY < (edge.y + edge.l))) {
-                    theta = 180 - (sin((pi * (float)theta / 180.0)) * 180.0)/pi;
-                    playHitSound();
-                    justHit = true;
-                }
-            }
-        } else {
-            if (theta > 0 && theta < 180) { // top
-                if ((abs(ballY - edge.y) < 3) && (ballX > edge.x) && (ballX < (edge.x + edge.l))) {
-                    theta = 270 + (sin((pi * (float)(theta-270) / 180.0)) * 180.0)/pi;
-                    playHitSound();
-                    justHit = true;
-                }
-            } else { // bottom
-                if ((abs(ballY - edge.y) < 3) && (ballX > edge.x) && (ballX < (edge.x + edge.l))) {
-                    theta = 90 + (sin((pi * (float)(theta-90) / 180.0)) * 180.0)/pi;
-                    playHitSound();
-                    justHit = true;
+    for (int32_t i = 0; i <= playerCount; i++) {
+        if (!inHole[i]) {
+            for (auto &edge : edges) {
+                if (edge.isVert) {
+                    if (theta > 90 && theta < 270) { // left
+                        if ((abs(ballsX[i] - edge.x) < 3) && (ballsY[i] > edge.y) && (ballsY[i] < (edge.y + edge.l))) {
+                            theta = (sin((pi * (float)theta / 180.0)) * 180.0)/pi;
+                            playHitSound();
+                            justHit = true;
+                        }
+                    } else { // right
+                        if ((abs(ballsX[i] - edge.x) < 3) && (ballsY[i] > edge.y) && (ballsY[i] < (edge.y + edge.l))) {
+                            theta = 180 - (sin((pi * (float)theta / 180.0)) * 180.0)/pi;
+                            playHitSound();
+                            justHit = true;
+                        }
+                    }
+                } else {
+                    if (theta > 0 && theta < 180) { // top
+                        if ((abs(ballsY[i] - edge.y) < 3) && (ballsX[i] > edge.x) && (ballsX[i] < (edge.x + edge.l))) {
+                            theta = 270 + (sin((pi * (float)(theta-270) / 180.0)) * 180.0)/pi;
+                            playHitSound();
+                            justHit = true;
+                        }
+                    } else { // bottom
+                        if ((abs(ballsY[i] - edge.y) < 3) && (ballsX[i] > edge.x) && (ballsX[i] < (edge.x + edge.l))) {
+                            theta = 90 + (sin((pi * (float)(theta-90) / 180.0)) * 180.0)/pi;
+                            playHitSound();
+                            justHit = true;
+                        }
+                    }
                 }
             }
         }
@@ -306,6 +362,16 @@ void update(uint32_t tick) {
      if (titlescreen) {
         if (pressed(A)) {
             titlescreen = false;
+        }
+        if (pressed(UP)) {
+            if (playerCount > 0) {
+                playerCount -= 1;
+            }
+        }
+        if (pressed(DOWN)) {
+            if (playerCount < 3) {
+                playerCount += 1;
+            }
         }
         return;
     }
@@ -342,10 +408,10 @@ void update(uint32_t tick) {
         if (pressed(A)) {
             cpower = power;
             isSettingPower = false;
-            strokes[hole] += 1;
+            if (strokes[playerTurn][hole] < 9) strokes[playerTurn][hole] += 1;
             playHitSound();
         }
-    }else if (!isAiming && !isSettingPower) {
+    } else if (!isAiming && !isSettingPower) {
         float speed = cpower > 20 ? 2 : 1.1;
         cpower -= 1;
         // if (justHit && cpower > 20) {
@@ -355,19 +421,25 @@ void update(uint32_t tick) {
             justHit = false;
             justHitTimer = 0;
         }
-        float bx = ballX + speed * cos((pi * (float)theta / (float)180.0));
-        float by = ballY - speed * sin((pi * (float)theta / (float)180.0));
-        ballX = bx;
-        ballY = by;
+        float bx = ballsX[playerTurn] + speed * cos((pi * (float)theta / (float)180.0));
+        float by = ballsY[playerTurn] - speed * sin((pi * (float)theta / (float)180.0));
+        ballsX[playerTurn] = bx;
+        ballsY[playerTurn] = by;
 
         if (cpower <= 0) {
             isAiming = true;
             power = 0;
-            if (ballY < 60) {
+            if (ballsY[playerTurn] < 60) {
                 theta = 270;
             } else {
                 theta = 90;
             }
+            do {
+                playerTurn += 1;
+                if (playerTurn > playerCount) {
+                    playerTurn = 0; 
+                }
+            } while(inHole[playerTurn]);
         }
     }
 
@@ -411,38 +483,112 @@ void draw(uint32_t tick) {
         text("Wyatt's Mini Golf", 20, 30);
 
         if (hiscore != 999) {
-            text("Lowest Score: ", 20, 60);
-            text(str(hiscore), 20, 70);
+            text("Best: ", 0, 0);
+            text(str(hiscore), 28, 00);
         }
 
-        if (time() % 1000 < 500) {
-            text("Press A", 42, 90);   
-        }
+        text("1 Player", 42, 60);
+        text("2 Players", 42, 70);
+        text("3 Players", 42, 80);
+        text("4 Players", 42, 90);
+
+        vline(34, 0 + (playerCount * 10) + 60, 8);
+        vline(35, 1 + (playerCount * 10) + 60, 6);
+        vline(36, 2 + (playerCount * 10) + 60, 4);
+        vline(37, 3 + (playerCount * 10) + 60, 2);
         return;
     }
 
-    pen(12,12,12);
+    pen(10,10,10);
     fcircle(holeX,holeY,holeRadius);
-
-    pen(15,15,15);
-    fcircle(ballX,ballY,ballRadius);
-
-    if (isAiming) {
-        int32_t px = ballX + arrowRadius * cos((pi * (float)theta / (float)180.0));
-        int32_t py = ballY - arrowRadius * sin((pi * (float)theta / (float)180.0));
-        line(ballX,ballY,px,py);
+    
+    for (int32_t i = playerCount; i >= 0; i--) {
+        switch (i) {
+            case 0:
+                pen(15,15,15);
+                break;
+            case 1:
+                pen(5,15,5);
+                break;
+            case 2:
+                pen(15,5,5);
+                break;
+            case 3:
+                pen(5,5,15);
+                break;
+        }
+        if (!inHole[i]) {
+            fcircle(ballsX[i],ballsY[i],ballRadius);
+        }
     }
+    switch (playerTurn) {
+        case 0:
+            pen(15,15,15);
+            break;
+        case 1:
+            pen(5,15,5);
+            break;
+        case 2:
+            pen(15,5,5);
+            break;
+        case 3:
+            pen(5,5,15);
+            break;
+    }
+    if (!inHole[playerTurn]) {
+        fcircle(ballsX[playerTurn],ballsY[playerTurn],ballRadius);
+    }
+    for (int32_t i = 0; i <= playerCount; i++) {
+        switch (i) {
+            case 0:
+                pen(15,15,15);
+                break;
+            case 1:
+                pen(5,15,5);
+                break;
+            case 2:
+                pen(15,5,5);
+                break;
+            case 3:
+                pen(5,5,15);
+                break;
+        }
+        int32_t total = 0;
+        for (int32_t n = 0; n < 9; n++) {
+            total += strokes[i][n];
+        }
+        text(str(total),70+(i*12),0);
+    }
+    pen(15,15,15);
 
     drawEdges();
 
     //ui
-    for (int32_t i = 0; i < 9; i++) {
-        text(strokes[i] == 0 && i != hole ? "-" : str(strokes[i]),(i*13) + 4,0);
+    switch (playerTurn) {
+        case 0:
+            pen(15,15,15);
+            break;
+        case 1:
+            pen(5,15,5);
+            break;
+        case 2:
+            pen(15,5,5);
+            break;
+        case 3:
+            pen(5,5,15);
+            break;
     }
-    int32_t total = 0;
-    for (int32_t i = 0; i < 9; i++) {
-        total += strokes[i];
+
+    if (isAiming) {
+        int32_t px = ballsX[playerTurn] + arrowRadius * cos((pi * (float)theta / (float)180.0));
+        int32_t py = ballsY[playerTurn] - arrowRadius * sin((pi * (float)theta / (float)180.0));
+        line(ballsX[playerTurn],ballsY[playerTurn],px,py);
     }
-    text("score:",0,8);
-    text(str(total),35,8);
+
+    for (int32_t i = 0; i < 9; i++) {
+        text(strokes[i] == 0 && i != hole ? "-" : str(strokes[playerTurn][i]),(i*7) + 2,0);
+    }
+
+    pen(15,15,15);
+    hline(0,8,120);
 }
