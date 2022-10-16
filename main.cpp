@@ -434,4 +434,10 @@ void draw(uint32_t tick) {
     for (int32_t i = 0; i < 9; i++) {
         text(strokes[i] == 0 && i != hole ? "-" : str(strokes[i]),(i*13) + 4,0);
     }
+    int32_t total = 0;
+    for (int32_t i = 0; i < 9; i++) {
+        total += strokes[i];
+    }
+    text("score:",0,8);
+    text(str(total),35,8);
 }
