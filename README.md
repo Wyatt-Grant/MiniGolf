@@ -1,16 +1,18 @@
-# PicoSystem Boilerplate
+# Wyatt's MiniGolf
+A mini golf game
 
-If you're starting a project in your own GitHub repository, this boilerplate will show you how to set it up.
+# Controls
+left/right: change angle
 
-You should have:
+a: select power/angle
 
-- CMakeLists.txt
-- main.cpp (and/or your sources)
-- pico_sdk_import.cmake - Helper to find the Pico SDK
-- picosystem_sdk_import.cmake  - Helper to find the PicoSystem SDK
+# Build:
+```
+    mkdir build
+    cd build
+    cmake ..
+    make
+```
+You should also have the Pico SDK and PicoSystem SDK's installed
 
-
-You should also have the Pico SDK and PicoSystem SDK's in directories alongside this one:
-
-- PicoSystem SDK - https://github.com/pimoroni/picosystem
-- Pico SDK - https://github.com/raspberrypi/pico-sdk/
+video: https://streamable.com/1rd8xr
