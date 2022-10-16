@@ -446,6 +446,7 @@ void update(uint32_t tick) {
                 if (playerTurn > playerCount) {
                     playerTurn = 0; 
                 }
+                lastEdge = {-1,-1,0,false};
             } while(inHole[playerTurn]);
         }
     }
