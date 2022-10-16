@@ -26,6 +26,8 @@ float cpower = 0;
 bool isAiming = true;
 bool isSettingPower = false;
 bool justHit = false;
+int32_t justHitTimer = 0;
+int32_t justHitTime = 2;
 struct Edge {
     int32_t x;
     int32_t y;
@@ -346,9 +348,12 @@ void update(uint32_t tick) {
     }else if (!isAiming && !isSettingPower) {
         float speed = cpower > 20 ? 2 : 1.1;
         cpower -= 1;
-        if (justHit && cpower > 20) {
-            speed = 4;
+        // if (justHit && cpower > 20) {
+        //     // speed = 4;
+        // }
+        if(justHitTimer++ >= justHitTime){
             justHit = false;
+            justHitTimer = 0;
         }
         float bx = ballX + speed * cos((pi * (float)theta / (float)180.0));
         float by = ballY - speed * sin((pi * (float)theta / (float)180.0));
@@ -366,7 +371,7 @@ void update(uint32_t tick) {
         }
     }
 
-    checkEdges();
+    if(!justHit) checkEdges();
     checkHole();
 
     // // top wall
