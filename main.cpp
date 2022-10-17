@@ -30,8 +30,8 @@ float cpower = 0;
 bool isAiming = true;
 bool isSettingPower = false;
 bool justHit = false;
-int32_t justHitTimer = 0;
-int32_t justHitTime = 1;
+// int32_t justHitTimer = 0;
+// int32_t justHitTime = 0;
 struct Edge {
     int32_t x;
     int32_t y;
@@ -230,7 +230,7 @@ void setUpHole() {
             holeY = 40;
             edges.push_back({10,110,40,false});
             edges.push_back({10,70,60,false});
-            edges.push_back({50,80,20,false});
+            edges.push_back({50,80,21,false});
             edges.push_back({10,70,40,true});
             edges.push_back({50,80,31,true});
 
@@ -243,7 +243,7 @@ void setUpHole() {
             edges.push_back({70,20,40,false});
             edges.push_back({70,20,51,true});
             edges.push_back({110,20,41,true});
-            edges.push_back({80,60,10,true});
+            edges.push_back({80,60,11,true});
             break;
         case 8:
             for (int32_t i = 0; i <= playerCount; i++) {
@@ -324,42 +324,82 @@ void checkHole() {
 void checkEdges() {
     // for (int32_t i = 0; i <= playerCount; i++) {
         int32_t overlap = 3;
-        if (!inHole[playerTurn]) {
+        if (!inHole[playerTurn] && !isAiming) {
             for (auto &edge : edges) {
                 if (lastEdge.x != edge.x || lastEdge.y != edge.y || lastEdge.l != edge.l || lastEdge.isVert != edge.isVert) {
                     if (edge.isVert) {
-                        if (theta >= 90 && theta <= 270) { // left
-                            if ((abs(ballsX[playerTurn] - edge.x) < overlap) && (ballsY[playerTurn] > edge.y) && (ballsY[playerTurn] < (edge.y + edge.l))) {
+                        if (theta >= 90 && theta < 270) { // left
+                            if (intersects(edge.x, edge.y, 1, edge.l, ballsX[playerTurn]-2, ballsY[playerTurn]-3, 6, 6)) {
+                            // if ((abs(ballsX[playerTurn] - edge.x) < overlap) && (ballsY[playerTurn] >= edge.y) && (ballsY[playerTurn] <= (edge.y + edge.l))) {
                                 theta = (sin((pi * (float)theta / 180.0)) * 180.0)/pi;
                                 playHitSound();
                                 justHit = true;
                                 lastEdge = edge;
+                                return;
                             }
-                        } else { // right
-                            if ((abs(ballsX[playerTurn] - edge.x) < overlap) && (ballsY[playerTurn] > edge.y) && (ballsY[playerTurn] < (edge.y + edge.l))) {
+                        }
+                        if (theta < 90 || theta > 270) {
+                        // } else { // right
+                            if (intersects(edge.x, edge.y, 1, edge.l, ballsX[playerTurn]-2, ballsY[playerTurn]-3, 6, 6)) {
+                            // if ((abs(ballsX[playerTurn] - edge.x) < overlap) && (ballsY[playerTurn] >= edge.y) && (ballsY[playerTurn] <= (edge.y + edge.l))) {
                                 theta = 180 - (sin((pi * (float)theta / 180.0)) * 180.0)/pi;
                                 playHitSound();
                                 justHit = true;
                                 lastEdge = edge;
+                                return;
                             }
                         }
+                        // if (theta == 90 && (abs(ballsX[playerTurn] - edge.x) < overlap) && ((abs(ballsY[playerTurn] - edge.y) < overlap) || abs(ballsY[playerTurn] - edge.y + edge.l) < overlap)) {
+                        //     theta = 270 + (sin((pi * (float)(theta-270) / 180.0)) * 180.0)/pi;
+                        //     playHitSound();
+                        //     justHit = true;
+                        //     lastEdge = edge;
+                        //     return;
+                        // }
+                        // if (theta == 270 && (abs(ballsX[playerTurn] - edge.x) < overlap) && ((abs(ballsY[playerTurn] - edge.y) < overlap) || abs(ballsY[playerTurn] - edge.y + edge.l) < overlap)) {
+                        //     theta = 90 + (sin((pi * (float)(theta-90) / 180.0)) * 180.0)/pi;
+                        //     playHitSound();
+                        //     justHit = true;
+                        //     lastEdge = edge;
+                        //     return;
+                        // }
                     }
                     if (!edge.isVert) {
-                        if (theta >= 0 && theta <= 180) { // top
-                            if ((abs(ballsY[playerTurn] - edge.y) < overlap) && (ballsX[playerTurn] > edge.x) && (ballsX[playerTurn] < (edge.x + edge.l))) {
+                        if (theta >= 0 && theta < 180) { // top
+                            if (intersects(edge.x, edge.y, edge.l, 1, ballsX[playerTurn]-2, ballsY[playerTurn]-3, 6, 6)) {
+                            // if ((abs(ballsY[playerTurn] - edge.y) < overlap) && (ballsX[playerTurn] >= edge.x) && (ballsX[playerTurn] <= (edge.x + edge.l))) {
                                 theta = 270 + (sin((pi * (float)(theta-270) / 180.0)) * 180.0)/pi;
                                 playHitSound();
                                 justHit = true;
                                 lastEdge = edge;
+                                return;
                             }
-                        } else { // bottom
-                            if ((abs(ballsY[playerTurn] - edge.y) < overlap) && (ballsX[playerTurn] > edge.x) && (ballsX[playerTurn] < (edge.x + edge.l))) {
+                        }
+                        if (theta < 0 || theta >= 180) {
+                        // } else { // bottom
+                            if (intersects(edge.x, edge.y, edge.l, 1, ballsX[playerTurn]-2, ballsY[playerTurn]-3, 6, 6)) {
+                            // if ((abs(ballsY[playerTurn] - edge.y) < overlap) && (ballsX[playerTurn] >= edge.x) && (ballsX[playerTurn] <= (edge.x + edge.l))) {
                                 theta = 90 + (sin((pi * (float)(theta-90) / 180.0)) * 180.0)/pi;
                                 playHitSound();
                                 justHit = true;
                                 lastEdge = edge;
+                                return;
                             }
                         }
+                        // if (theta == 180 && (abs(ballsY[playerTurn] - edge.y) < overlap) && ((abs(ballsX[playerTurn] - edge.x) < overlap) || abs(ballsX[playerTurn] - edge.x + edge.l) < overlap)) {
+                        //     theta = (sin((pi * (float)theta / 180.0)) * 180.0)/pi;
+                        //     playHitSound();
+                        //     justHit = true;
+                        //     lastEdge = edge;
+                        //     return;
+                        // }
+                        // if (theta == 0 && (abs(ballsY[playerTurn] - edge.y) < overlap) && ((abs(ballsX[playerTurn] - edge.x) < overlap) || abs(ballsX[playerTurn] - edge.x + edge.l) < overlap)) {
+                        //     theta = 180 - (sin((pi * (float)theta / 180.0)) * 180.0)/pi;
+                        //     playHitSound();
+                        //     justHit = true;
+                        //     lastEdge = edge;
+                        //     return;
+                        // }
                     }
                 }
             }
@@ -391,6 +431,7 @@ void update(uint32_t tick) {
     }
 
     if (isAiming) {
+        lastEdge = {-1,-1,0,false};
         if (button(LEFT)) {
             if (theta++ > 360) theta = 0;
         }
@@ -400,6 +441,22 @@ void update(uint32_t tick) {
         if (pressed(A)) {
             isAiming = false;
             isSettingPower = true;
+        }
+        if (button(Y) && pressed(X)) {
+            for (int32_t i = 0; i <= playerCount; i++) {
+                inHole[i] = false;
+            }
+            playerTurn = playerCount;
+            hasSetUpHole = false;
+            edges.clear();
+            edges.shrink_to_fit();
+            for (int32_t i = 0; i <= playerCount; i++) {
+                ballsX[i] = 0;
+                ballsY[i] = 0;
+            }
+            for (int32_t i = 0; i <= playerCount; i++) {
+                strokes[hole][i] = 0;
+            }
         }
     } else if (isSettingPower) {
         if (power < 5) {
@@ -423,13 +480,17 @@ void update(uint32_t tick) {
     } else if (!isAiming && !isSettingPower) {
         float speed = cpower > 20 ? 2 : 1.1;
         cpower -= 1;
-        // if (justHit && cpower > 20) {
-        //     // speed = 4;
-        // }
-        if(justHitTimer++ >= justHitTime){
+        if (justHit) {
+            // speed = 3;
             justHit = false;
-            justHitTimer = 0;
         }
+        // if (justHit && cpower > 20) {
+        //     speed = 4;
+        // }
+        // if(justHitTimer++ >= justHitTime){
+        //     justHit = false;
+        //     justHitTimer = 0;
+        // }
         float bx = ballsX[playerTurn] + speed * cos((pi * (float)theta / (float)180.0));
         float by = ballsY[playerTurn] - speed * sin((pi * (float)theta / (float)180.0));
         ballsX[playerTurn] = bx;
@@ -448,12 +509,11 @@ void update(uint32_t tick) {
                 if (playerTurn > playerCount) {
                     playerTurn = 0; 
                 }
-                lastEdge = {-1,-1,0,false};
             } while(inHole[playerTurn]);
         }
     }
 
-    if(!justHit) checkEdges();
+    /*if(!justHit)*/ checkEdges();
     checkHole();
 
     // // top wall
