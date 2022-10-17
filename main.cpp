@@ -329,7 +329,7 @@ void checkEdges() {
                 if (lastEdge.x != edge.x || lastEdge.y != edge.y || lastEdge.l != edge.l || lastEdge.isVert != edge.isVert) {
                     if (edge.isVert) {
                         if (theta >= 90 && theta < 270) { // left
-                            if (intersects(edge.x, edge.y, 1, edge.l, ballsX[playerTurn]-2, ballsY[playerTurn]-3, 6, 6)) {
+                            if (intersects(edge.x, edge.y, 1, edge.l, ballsX[playerTurn]-2, ballsY[playerTurn]-2, 4, 4)) {
                             // if ((abs(ballsX[playerTurn] - edge.x) < overlap) && (ballsY[playerTurn] >= edge.y) && (ballsY[playerTurn] <= (edge.y + edge.l))) {
                                 theta = (sin((pi * (float)theta / 180.0)) * 180.0)/pi;
                                 playHitSound();
@@ -340,7 +340,7 @@ void checkEdges() {
                         }
                         if (theta < 90 || theta > 270) {
                         // } else { // right
-                            if (intersects(edge.x, edge.y, 1, edge.l, ballsX[playerTurn]-2, ballsY[playerTurn]-3, 6, 6)) {
+                            if (intersects(edge.x, edge.y, 1, edge.l, ballsX[playerTurn]-2, ballsY[playerTurn]-2, 4, 4)) {
                             // if ((abs(ballsX[playerTurn] - edge.x) < overlap) && (ballsY[playerTurn] >= edge.y) && (ballsY[playerTurn] <= (edge.y + edge.l))) {
                                 theta = 180 - (sin((pi * (float)theta / 180.0)) * 180.0)/pi;
                                 playHitSound();
@@ -366,7 +366,7 @@ void checkEdges() {
                     }
                     if (!edge.isVert) {
                         if (theta >= 0 && theta < 180) { // top
-                            if (intersects(edge.x, edge.y, edge.l, 1, ballsX[playerTurn]-2, ballsY[playerTurn]-3, 6, 6)) {
+                            if (intersects(edge.x, edge.y, edge.l, 1, ballsX[playerTurn]-2, ballsY[playerTurn]-2, 4, 4)) {
                             // if ((abs(ballsY[playerTurn] - edge.y) < overlap) && (ballsX[playerTurn] >= edge.x) && (ballsX[playerTurn] <= (edge.x + edge.l))) {
                                 theta = 270 + (sin((pi * (float)(theta-270) / 180.0)) * 180.0)/pi;
                                 playHitSound();
@@ -377,7 +377,7 @@ void checkEdges() {
                         }
                         if (theta < 0 || theta >= 180) {
                         // } else { // bottom
-                            if (intersects(edge.x, edge.y, edge.l, 1, ballsX[playerTurn]-2, ballsY[playerTurn]-3, 6, 6)) {
+                            if (intersects(edge.x, edge.y, edge.l, 1, ballsX[playerTurn]-2, ballsY[playerTurn]-2, 4, 4)) {
                             // if ((abs(ballsY[playerTurn] - edge.y) < overlap) && (ballsX[playerTurn] >= edge.x) && (ballsX[playerTurn] <= (edge.x + edge.l))) {
                                 theta = 90 + (sin((pi * (float)(theta-90) / 180.0)) * 180.0)/pi;
                                 playHitSound();
@@ -481,7 +481,7 @@ void update(uint32_t tick) {
         float speed = cpower > 20 ? 2 : 1.1;
         cpower -= 1;
         if (justHit) {
-            // speed = 3;
+            speed = 3;
             justHit = false;
         }
         // if (justHit && cpower > 20) {
